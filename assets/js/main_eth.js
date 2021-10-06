@@ -11,6 +11,8 @@ var baseNum = '';
 var currentAddr = '';
 var spend;
 var usrBal;
+var price = 0;
+var balance = 0;
 
 window.addEventListener('load', async function() {
     if (window.ethereum) {
@@ -88,11 +90,30 @@ function refreshData(){
         console.log("spend limit=" + spend);
     });
 
+    try { tokenPrice(function(result){
+            const jsonData = JSON.parse(result);
+            price = +jsonData["solana"]["usd"];
+            console.log("pancake=" + price);
+        });
+    }
+    catch { price = 0; }
+
     var balanceElem = document.getElementById('contract-balance');
-    var baseNum = 0;
     contractBalance(function(result){
+        balance = +result;
         rawStr = numberWithCommas(Number(result).toFixed(3));
-        balanceElem.textContent = stripDecimals(rawStr, 3) + ' SOL';
+        const tokenBal = stripDecimals(rawStr, 3) + ' SOL';
+
+
+        if (+price > 0 && +balance > 0) {
+            dollarBal = stripDecimals(numberWithCommas((+price * +balance).toFixed(0)),3);
+            const bal = tokenBal + " ($" + dollarBal + ")";
+            console.log(bal);
+            balanceElem.textContent = bal;
+        } else
+        {
+            balanceElem.textContent = tokenBal;
+        }
     });
 
     var userBalanceElem = document.getElementById('user-balance');
