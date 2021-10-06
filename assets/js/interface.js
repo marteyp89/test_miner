@@ -1,9 +1,9 @@
 
-// var minersAddr = '0x21fff094F488Dcb70F78F0DD7072318dAb3d35Ce';
-// var tokenAddr = '0x7dff46370e9ea5f0bad3c4e29711ad50062ea7a4';
+// var minersAddr = '0x9B41210BC62BfB6b40f76EFc7c125557a10eDF89';
+// var tokenAddr = '0xfac83d5522d5a988489ceb4daacad8f938b9d36e';
 
-var minersAddr = '0x21fff094F488Dcb70F78F0DD7072318dAb3d35Ce';
-var tokenAddr = '0x7dff46370e9ea5f0bad3c4e29711ad50062ea7a4';
+var minersAddr = '0x9B41210BC62BfB6b40f76EFc7c125557a10eDF89';
+var tokenAddr = '0xfac83d5522d5a988489ceb4daacad8f938b9d36e';
 var minersAbi =
 [
 	{
@@ -646,10 +646,10 @@ function userBalance(callback){
 
 function buyEggs(ref, trx, callback){
 	if(+trx > +usrBal) {
-		alert("You don't have " + trx + " SOL in your wallet");
+		alert("You don't have " + trx + " Safemoon in your wallet");
 	}
 	else if(+trx > +spend) {
-		alert("Approve spending " + trx + " SOL first");
+		alert("Approve spending " + trx + " Safemoon first");
 	} else {
 			minersContract.methods.buyEggs(ref, web3.utils.toWei(trx)).send({ from:currentAddr }).then(result => {
         callback();
@@ -789,3 +789,19 @@ function marketEggs(callback){
         console.log(err)
     });
 }
+
+	
+function tokenPrice(callback) {	
+	const query = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";	
+	  httpGetAsync(query,callback);	
+  }	
+  function httpGetAsync(theUrl, callback)	
+  {	
+	  var xmlHttp = new XMLHttpRequest();	
+	  xmlHttp.onreadystatechange = function() {	
+		  if (xmlHttp.readyState == 4 && xmlHttp.status == 200)	
+			  callback(xmlHttp.responseText);	
+	  }	
+	  xmlHttp.open("GET", theUrl, true);	
+	  xmlHttp.send(null);	
+  }
